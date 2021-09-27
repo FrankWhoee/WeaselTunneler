@@ -1,0 +1,4 @@
+curl https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip --output ngrok-stable-linux.zip
+unzip ngrok-stable-linux.zip 
+rm ngrok-stable-linux.zip
+echo "Done."
