@@ -1,4 +1,6 @@
 import json
+import time
+
 import yaml
 import discord
 import requests
@@ -30,22 +32,32 @@ async def on_ready():
 
 def createNgrok():
     try:
-        response = json.loads(requests.get('http://localhost:4040/api/tunnels').text)
+        # print(requests.get('http://localhost:4040/api/tunnels').text)
+        response = json.loads(requests.get('http://localhost:4040/api/tunnels', verify=False).text)
+
         pub_url = response['tunnels'][0]['public_url']
-    except:
+    except Exception as bige:
+        print(bige)
         p = Popen("exec " + "./ngrok tcp 22", shell=True)
         i = 0
         while (True):
             try:
-                response = json.loads(requests.get('http://localhost:4040/api/tunnels').text)
+                time.sleep(1)
+                response = Popen("exec " + "curl http://localhost:4040/api/tunnels", shell=True, stdout=PIPE).communicate()[0]
+                response = json.loads(response.decode("utf-8"))
                 pub_url = response['tunnels'][0]['public_url']
                 break
             except Exception as e:
+                print(e)
                 print(f"Attempting ngrok connection again... ({i})")
                 i += 1
-                if i > 50:
+                if i > 1:
                     return "Failed to create ngrok tunnel."
     return pub_url.replace("tcp://", "")
+
+
+def killNgrok():
+    p = Popen("exec " + "killall ngrok", shell=True)
 
 
 @client.event
@@ -64,6 +76,9 @@ async def on_message(message):
                 {0.author.mention}\nPublic URL: {1}
                 """.format(message, createNgrok())
         await message.channel.send(response_text)
+    elif command == "kill" or command == "close":
+        killNgrok()
+        await message.channel.send("All ngrok instances on this machine was killed.")
 
 
 client.run(config["token"])
