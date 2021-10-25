@@ -6,7 +6,7 @@ import os
 import sys
 from subprocess import Popen, PIPE
 
-serverp = ... # type: Popen
+serverp = ...  # type: Popen
 
 client = discord.Client()
 
@@ -22,31 +22,39 @@ else:
         yaml.dump(config)
     print("[WARN] A new configuration file has been created at config.")
 
+
 @client.event
 async def on_ready():
     print('We have logged in as {0.user}'.format(client))
+
 
 def createNgrok():
     try:
         response = json.loads(requests.get('http://localhost:4040/api/tunnels').text)
         pub_url = response['tunnels'][0]['public_url']
     except:
-        p = Popen("exec " + "ngrok tcp 22", shell=True)
+        p = Popen("exec " + "./ngrok tcp 22", shell=True)
+        i = 0
         while (True):
             try:
                 response = json.loads(requests.get('http://localhost:4040/api/tunnels').text)
                 pub_url = response['tunnels'][0]['public_url']
                 break
             except Exception as e:
-                print("Attempting ngrok connection again...")
-    return pub_url.replace("tcp://","")
+                print(f"Attempting ngrok connection again... ({i})")
+                i += 1
+                if i > 50:
+                    return "Failed to create ngrok tunnel."
+    return pub_url.replace("tcp://", "")
+
 
 @client.event
 async def on_message(message):
     # 420468092108406785 is my personal testing channel ID
-    if message.author == client.user or (message.channel.id != config["channel"] or message.channel.id != 420468092108406785):
+    if message.author == client.user:
         return
-
+    if not message.content.startswith(";"):
+        return
     command = message.content.split(" ")[0]
     param = message.content.split(" ")[1:]
     command = command[1:]
