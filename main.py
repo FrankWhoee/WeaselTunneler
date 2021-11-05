@@ -17,7 +17,7 @@ if os.path.exists("config"):
         config = yaml.load(file, Loader=yaml.FullLoader)
 else:
     print("[WARN] No configuration file found.")
-    token = input("Give a token or give an empty string to replace it later.")
+    token = input("Give a token or give an empty string to replace it later:\n")
     with open('config', 'w') as file:
         config = {
             "token": token
