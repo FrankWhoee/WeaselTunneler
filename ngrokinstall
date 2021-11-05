@@ -1,7 +1,8 @@
-if uname -m = "x86_64"
+ARCH=$(uname -m)
+if ARCH = "x86_64"
 then
     curl https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-amd64.zip --output ngrok.zip
-elif uname -m = "armv7l"
+elif ARCH = "armv7l"
 then
     curl https://bin.equinox.io/c/4VmDzA7iaHb/ngrok-stable-linux-arm.zip --output ngrok.zip
 else
