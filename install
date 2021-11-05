@@ -1,0 +1,13 @@
+if ! command -v python3 &> /dev/null
+then
+    echo "Please install python3. https://www.python.org/downloads/release/python-3810/"
+    exit
+fi
+echo "Creating virtualenv"
+python3 -m venv venv
+source venv/bin/activate
+echo "Installing requirements in ./venv"
+pip install -r requirements.txt
+echo "Running ngrokinstall"
+./ngrokinstall
+echo "Installation complete."
