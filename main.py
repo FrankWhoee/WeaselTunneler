@@ -22,7 +22,7 @@ else:
         config = {
             "token": token
         }
-        yaml.dump(config)
+        file.write(yaml.dump(config))
     print("[WARN] A new configuration file has been created at config.")
 
 
