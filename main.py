@@ -88,4 +88,4 @@ while (tries > 0):
         client.run(config["token"])
         break
     except:
-        pass
+        time.sleep(1)
