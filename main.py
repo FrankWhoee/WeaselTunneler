@@ -88,4 +88,6 @@ while (tries > 0):
         client.run(config["token"])
         break
     except:
+        print("Failed connection, retrying.")
         time.sleep(1)
+    tries -= 1
