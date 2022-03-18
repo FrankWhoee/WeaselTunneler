@@ -8,6 +8,8 @@ import os
 import sys
 from subprocess import Popen, PIPE
 
+tries = 10
+
 serverp = ...  # type: Popen
 
 client = discord.Client()
@@ -81,5 +83,9 @@ async def on_message(message):
         killNgrok()
         await message.channel.send("All ngrok instances on this machine was killed.")
 
-
-client.run(config["token"])
+while (tries > 0):
+    try:
+        client.run(config["token"])
+        break
+    except:
+        pass
